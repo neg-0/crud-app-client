@@ -12,11 +12,13 @@ import Toolbar from '@mui/material/Toolbar';
 import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
 import * as React from 'react';
+import { Link } from 'react-router-dom';
+import { UserContext } from '../components/AuthenticationProvider';
 
 const pages = ['Products', 'Pricing', 'Blog'];
-const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 
 function ResponsiveAppBar() {
+  const { loggedInUser } = React.useContext(UserContext);
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
 
@@ -128,7 +130,7 @@ function ResponsiveAppBar() {
           <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="Open settings">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
+                <Avatar alt="Remy Sharp" src="" />
               </IconButton>
             </Tooltip>
             <Menu
@@ -147,11 +149,27 @@ function ResponsiveAppBar() {
               open={Boolean(anchorElUser)}
               onClose={handleCloseUserMenu}
             >
-              {settings.map((setting) => (
-                <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                  <Typography textAlign="center">{setting}</Typography>
+              {loggedInUser ?
+                <Box>
+                  <MenuItem onClick={handleCloseUserMenu}>
+                    <Link to='profile'>
+                      <Typography textAlign="center">Profile</Typography>
+                    </Link>
+                  </MenuItem>
+                  <MenuItem onClick={handleCloseUserMenu}>
+                    <Link to='logout'>
+                      <Typography textAlign="center">Logout</Typography>
+                    </Link>
+                  </MenuItem>
+                </Box>
+                :
+                <MenuItem onClick={handleCloseUserMenu}>
+                  <Link to='login'>
+                    <Typography textAlign="center">Login</Typography>
+                  </Link>
                 </MenuItem>
-              ))}
+
+              }
             </Menu>
           </Box>
         </Toolbar>
