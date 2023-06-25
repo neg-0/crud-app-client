@@ -13,12 +13,15 @@ import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
-import { UserContext } from '../components/AuthenticationProvider';
+import { useAuth } from '../hooks/useAuthentication';
 
-const pages = ['Products', 'Pricing', 'Blog'];
+const pages = {
+  Inventory: '/',
+  Create: '/create',
+}
 
 function ResponsiveAppBar() {
-  const { loggedInUser } = React.useContext(UserContext);
+  const { user, logout } = useAuth();
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
 
@@ -36,6 +39,11 @@ function ResponsiveAppBar() {
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
   };
+
+  const handleLogout = () => {
+    logout();
+    handleCloseUserMenu();
+  }
 
   return (
     <AppBar position="static">
@@ -57,7 +65,7 @@ function ResponsiveAppBar() {
               textDecoration: 'none',
             }}
           >
-            LOGO
+            CRUD
           </Typography>
 
           <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
@@ -89,9 +97,11 @@ function ResponsiveAppBar() {
                 display: { xs: 'block', md: 'none' },
               }}
             >
-              {pages.map((page) => (
+              {Object.entries(pages).map(([page, path]) => (
                 <MenuItem key={page} onClick={handleCloseNavMenu}>
-                  <Typography textAlign="center">{page}</Typography>
+                  <Link to={path}>
+                    <Typography textAlign="center">{page}</Typography>
+                  </Link>
                 </MenuItem>
               ))}
             </Menu>
@@ -113,14 +123,16 @@ function ResponsiveAppBar() {
               textDecoration: 'none',
             }}
           >
-            LOGO
+            CRUD
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
-            {pages.map((page) => (
+            {Object.entries(pages).map(([page, path]) => (
               <Button
                 key={page}
                 onClick={handleCloseNavMenu}
-                sx={{ my: 2, color: 'white', display: 'block' }}
+                sx={{ my: 2, color: 'white', display: 'block', ":hover": { color: 'white', backgroundColor: 'black' } }}
+                variant="outlined"
+                href={path}
               >
                 {page}
               </Button>
@@ -149,26 +161,30 @@ function ResponsiveAppBar() {
               open={Boolean(anchorElUser)}
               onClose={handleCloseUserMenu}
             >
-              {loggedInUser ?
+              {user ?
                 <Box>
                   <MenuItem onClick={handleCloseUserMenu}>
                     <Link to='profile'>
                       <Typography textAlign="center">Profile</Typography>
                     </Link>
                   </MenuItem>
-                  <MenuItem onClick={handleCloseUserMenu}>
-                    <Link to='logout'>
-                      <Typography textAlign="center">Logout</Typography>
-                    </Link>
+                  <MenuItem onClick={handleLogout}>
+                    <Typography textAlign="center">Logout</Typography>
                   </MenuItem>
                 </Box>
                 :
-                <MenuItem onClick={handleCloseUserMenu}>
-                  <Link to='login'>
-                    <Typography textAlign="center">Login</Typography>
-                  </Link>
-                </MenuItem>
-
+                <Box>
+                  <MenuItem onClick={handleCloseUserMenu}>
+                    <Link to='login'>
+                      <Typography textAlign="center">Login</Typography>
+                    </Link>
+                  </MenuItem>
+                  <MenuItem onClick={handleCloseUserMenu}>
+                    <Link to='register'>
+                      <Typography textAlign="center">Register</Typography>
+                    </Link>
+                  </MenuItem>
+                </Box>
               }
             </Menu>
           </Box>
