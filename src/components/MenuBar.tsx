@@ -1,5 +1,6 @@
 import AdbIcon from '@mui/icons-material/Adb';
 import MenuIcon from '@mui/icons-material/Menu';
+import { Divider, Link } from '@mui/material';
 import AppBar from '@mui/material/AppBar';
 import Avatar from '@mui/material/Avatar';
 import Box from '@mui/material/Box';
@@ -12,7 +13,6 @@ import Toolbar from '@mui/material/Toolbar';
 import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
 import * as React from 'react';
-import { Link } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuthentication';
 
 const pages = {
@@ -98,10 +98,8 @@ function ResponsiveAppBar() {
               }}
             >
               {Object.entries(pages).map(([page, path]) => (
-                <MenuItem key={page} onClick={handleCloseNavMenu}>
-                  <Link to={path}>
-                    <Typography textAlign="center">{page}</Typography>
-                  </Link>
+                <MenuItem key={page} onClick={handleCloseNavMenu} component={Link} href={path}>
+                  <Typography textAlign="center">{page}</Typography>
                 </MenuItem>
               ))}
             </Menu>
@@ -162,27 +160,23 @@ function ResponsiveAppBar() {
               onClose={handleCloseUserMenu}
             >
               {user ?
-                <Box>
-                  <MenuItem onClick={handleCloseUserMenu}>
-                    <Link to='profile'>
-                      <Typography textAlign="center">Profile</Typography>
-                    </Link>
+                <Box sx={{ minWidth: "200px" }}>
+                  <MenuItem onClick={handleCloseUserMenu} component={Link} href='profile'>
+                    <Typography textAlign="center">Profile</Typography>
                   </MenuItem>
+                  <Divider />
                   <MenuItem onClick={handleLogout}>
                     <Typography textAlign="center">Logout</Typography>
                   </MenuItem>
                 </Box>
                 :
-                <Box>
-                  <MenuItem onClick={handleCloseUserMenu}>
-                    <Link to='login'>
-                      <Typography textAlign="center">Login</Typography>
-                    </Link>
+                <Box sx={{ minWidth: "200px" }}>
+                  <MenuItem onClick={handleCloseUserMenu} component={Link} href='register'>
+                    <Typography textAlign="center">Register</Typography>
                   </MenuItem>
-                  <MenuItem onClick={handleCloseUserMenu}>
-                    <Link to='register'>
-                      <Typography textAlign="center">Register</Typography>
-                    </Link>
+                  <Divider />
+                  <MenuItem onClick={handleCloseUserMenu} component={Link} href='login'>
+                    <Typography textAlign="center">Login</Typography>
                   </MenuItem>
                 </Box>
               }
