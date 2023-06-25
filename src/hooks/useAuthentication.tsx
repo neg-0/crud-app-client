@@ -42,6 +42,7 @@ export function ProvideAuthentication({ children }: ProvideAuthenticationProps) 
   );
 }
 
+// eslint-disable-next-line react-refresh/only-export-components
 export function useAuth() {
   return useContext(authContext);
 }
@@ -59,11 +60,10 @@ function Authentication() {
       clearError();
       setUser(res.data);
       return res;
-    }).catch(err => {
-      console.log(err);
-      setError(err.response.data.error);
+    }).catch(() => {
+      return;
     });
-  }, [setUser, setError]);
+  }, [setUser]);
 
   useEffect(() => {
     autoSignIn();
