@@ -63,7 +63,7 @@ export default function ViewItem() {
   if (!item) return (<>Loading...</>)
 
   return (<>
-    <Stack spacing={2} sx={{ width: "50%", margin: "auto" }}>
+    <Stack spacing={2} sx={{ width: "50%", margin: "auto", mt: 3 }}>
       <Typography variant="h4">{itemName}</Typography>
       <TextField disabled={true} label="Item ID" value={item.id} />
       <TextField disabled={!editingItem} label="Item Name" value={item.item_name} onChange={(e) => setItem({ ...item, item_name: e.target.value })} />
