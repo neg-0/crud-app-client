@@ -1,4 +1,4 @@
-import AdbIcon from '@mui/icons-material/Adb';
+import InventoryIcon from '@mui/icons-material/Inventory';
 import MenuIcon from '@mui/icons-material/Menu';
 import { Divider, Link } from '@mui/material';
 import AppBar from '@mui/material/AppBar';
@@ -12,8 +12,11 @@ import MenuItem from '@mui/material/MenuItem';
 import Toolbar from '@mui/material/Toolbar';
 import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
+import { AvatarGenerator } from 'random-avatar-generator';
 import * as React from 'react';
 import { useAuth } from '../hooks/useAuthentication';
+
+const avatarGenerator = new AvatarGenerator();
 
 const pages = {
   Inventory: '/',
@@ -49,7 +52,7 @@ function ResponsiveAppBar() {
     <AppBar position="static">
       <Container maxWidth="xl">
         <Toolbar disableGutters>
-          <AdbIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} />
+          <InventoryIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} />
           <Typography
             variant="h6"
             noWrap
@@ -104,7 +107,7 @@ function ResponsiveAppBar() {
               ))}
             </Menu>
           </Box>
-          <AdbIcon sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }} />
+          <InventoryIcon sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }} />
           <Typography
             variant="h5"
             noWrap
@@ -128,7 +131,7 @@ function ResponsiveAppBar() {
               <Button
                 key={page}
                 onClick={handleCloseNavMenu}
-                sx={{ my: 2, color: 'white', display: 'block', ":hover": { color: 'white', backgroundColor: 'black' } }}
+                sx={{ my: 2, color: 'white', display: 'block', ":hover": { color: 'white', backgroundColor: '#1976d2' } }}
                 variant="outlined"
                 href={path}
               >
@@ -140,7 +143,7 @@ function ResponsiveAppBar() {
           <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="Open settings">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt="Remy Sharp" src="" />
+                <Avatar alt="Remy Sharp" src={user ? avatarGenerator.generateRandomAvatar("" + user.id) : ""} />
               </IconButton>
             </Tooltip>
             <Menu
