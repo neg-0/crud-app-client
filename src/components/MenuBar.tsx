@@ -14,6 +14,7 @@ import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
 import { AvatarGenerator } from 'random-avatar-generator';
 import * as React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuthentication';
 
 const avatarGenerator = new AvatarGenerator();
@@ -25,6 +26,7 @@ const pages = {
 
 function ResponsiveAppBar() {
   const { user, logout } = useAuth();
+  const navigate = useNavigate();
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
 
@@ -46,6 +48,7 @@ function ResponsiveAppBar() {
   const handleLogout = () => {
     logout();
     handleCloseUserMenu();
+    navigate('/');
   }
 
   return (
