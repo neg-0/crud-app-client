@@ -3,17 +3,19 @@ import { DataGrid, GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
 import axios from 'axios';
 import { useEffect, useState } from "react";
 import { Link } from 'react-router-dom';
-import { useAuth } from '../hooks/useAuthentication';
+import { User, useAuth } from '../hooks/useAuthentication';
 
-type InventoryItemData = {
+export type InventoryItemData = {
   id: number,
   item_name: string,
   description: string,
   quantity: number,
-  user_id: number
+  user_id: number,
+  user: User | null
 }
 
 const inventoryItemColumns: GridColDef[] = [
+  { field: 'id', headerName: 'ID', width: 100 },
   { field: 'item_name', headerName: 'Name', width: 300, renderCell: (params: GridRenderCellParams<InventoryItemData>) => (<Link to={`/viewItem/${params.row.id}`}>{params.value}</Link>) },
   { field: 'description', headerName: 'Description', width: 800 },
   { field: 'quantity', headerName: 'Quantity', width: 100 },
@@ -50,6 +52,11 @@ export default function InventoryList() {
           </Stack>
         </Button>)}
       <DataGrid rows={inventoryItems} columns={inventoryItemColumns}
+        initialState={{
+          sorting: {
+            sortModel: [{ field: 'id', sort: 'asc' }]
+          }
+        }}
         columnVisibilityModel={{
           username: (user !== null)
         }} />
