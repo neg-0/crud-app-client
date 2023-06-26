@@ -43,6 +43,8 @@ export default function Profile() {
     changePassword(newPassword)
       .then(() => {
         setPasswordError("");
+        setNewPassword("");
+        setVerifyPassword("");
       })
       .catch((err) => {
         setPasswordError(err.message);
@@ -80,12 +82,12 @@ export default function Profile() {
   }
 
   return (<>
-    <Stack spacing={2} sx={{ width: "50%", margin: "auto" }}>
+    <Stack component="form" spacing={2} sx={{ width: "50%", margin: "auto", mt: 3 }}>
       <Typography variant="h4">{`${user.first_name} ${user.last_name}'s Profile`}</Typography>
       <TextField disabled={true} label="User ID" value={user.id} />
       <TextField disabled={!editingUser} label="First Name" value={firstName} onChange={(e) => setFirstName(e.target.value)} />
       <TextField disabled={!editingUser} label="Last Name" value={lastName} onChange={(e) => setLastName(e.target.value)} />
-      <TextField disabled={!editingUser} label="Username" value={username} onChange={(e) => setUsername(e.target.value)} />
+      <TextField autoComplete="username" disabled={!editingUser} label="Username" value={username} onChange={(e) => setUsername(e.target.value)} />
 
       {editingUser ? (
         <>
@@ -107,8 +109,8 @@ export default function Profile() {
       }
 
       <Typography variant="h6">Change Password</Typography>
-      <TextField label="New Password" value={newPassword} onChange={(e) => setNewPassword(e.target.value)} />
-      <TextField label="Verify Password" value={verifyPassword} onChange={(e) => setVerifyPassword(e.target.value)} />
+      <TextField type="password" autoComplete="new-password" label="New Password" value={newPassword} onChange={(e) => setNewPassword(e.target.value)} />
+      <TextField type="password" autoComplete="new-password" label="Verify Password" value={verifyPassword} onChange={(e) => setVerifyPassword(e.target.value)} />
       <Stack direction="row" spacing={2} sx={{ width: "50%", margin: "auto" }}>
         <Button type="submit" variant="contained" onClick={handleUpdatePassword}>Change Password</Button>
       </Stack>
