@@ -14,13 +14,19 @@ export type User = {
 }
 
 type AuthContextProps = {
-  autoSignIn: () => Promise<void | AxiosResponse<any, any>>,
+  autoSignIn: () => Promise<void | AxiosResponse<unknown, unknown>>,
   user: User | null,
-  register: (username: string, password: string, first_name: string, last_name: string) => Promise<void | AxiosResponse<any, any>>,
-  login: (username: string, password: string) => Promise<void | AxiosResponse<any, any>>,
+  register: (username: string, password: string, first_name: string, last_name: string) => Promise<void | AxiosResponse<unknown, unknown>>,
+  login: (username: string, password: string) => Promise<void | AxiosResponse<unknown, unknown>>,
   logout: () => void,
   error: null | string,
-  clearError: () => void
+  clearError: () => void,
+  changeUserData: (user: {
+    username: string,
+    first_name: string,
+    last_name: string,
+  }) => Promise<void | AxiosResponse<unknown, unknown>>,
+  changePassword: (password: string) => Promise<void | AxiosResponse<unknown, unknown>>,
 }
 
 const authContext = createContext<AuthContextProps>({} as AuthContextProps);
@@ -109,6 +115,30 @@ function Authentication() {
       });
   }
 
+  function changeUserData(user: {
+    username: string,
+    first_name: string,
+    last_name: string,
+  }) {
+    return api.post('/change_user_data', user)
+      .then(res => {
+        console.log("Successful change user data", res);
+        clearError();
+        setUser(res.data);
+        return res;
+      })
+  }
+
+  function changePassword(password: string) {
+    return api.post('/change_password', { password })
+      .then(res => {
+        console.log("Successful change password", res);
+        clearError();
+        setUser(res.data);
+        return res;
+      })
+  }
+
   function clearError() {
     setError(null);
   }
@@ -120,6 +150,8 @@ function Authentication() {
     login,
     logout,
     error,
-    clearError
+    clearError,
+    changeUserData,
+    changePassword,
   }
 }
