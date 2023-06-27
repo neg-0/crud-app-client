@@ -17,6 +17,7 @@ const router = createBrowserRouter(
     <>
       <Route element={<Root />}>
         <Route path="/" element={<Inventory />} />
+        <Route path="/myItems" element={<Inventory onlyUsersItems={true} />} />
         <Route path="/create" element={<CreateItem />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/login" element={<Login />} />

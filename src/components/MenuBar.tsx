@@ -20,8 +20,9 @@ import { useAuth } from '../hooks/useAuthentication';
 const avatarGenerator = new AvatarGenerator();
 
 const pages = {
-  Inventory: '/',
-  Create: '/create',
+  "View All Items": { role: "all", path: '/' },
+  "My Items": { role: "user", path: '/myItems' },
+  "Create": { role: "user", path: '/create' },
 }
 
 function ResponsiveAppBar() {
@@ -103,11 +104,16 @@ function ResponsiveAppBar() {
                 display: { xs: 'block', md: 'none' },
               }}
             >
-              {Object.entries(pages).map(([page, path]) => (
-                <MenuItem key={page} onClick={handleCloseNavMenu} component={Link} href={path}>
-                  <Typography textAlign="center">{page}</Typography>
-                </MenuItem>
-              ))}
+              {Object.entries(pages).map(([page, pathData]) => {
+                if (pathData.role === "all" || (pathData.role === "user" && user)) {
+                  return (
+                    <MenuItem key={page} onClick={handleCloseNavMenu} component={Link} href={pathData.path}>
+                      <Typography textAlign="center">{page}</Typography>
+                    </MenuItem>
+                  )
+                }
+              }
+              )}
             </Menu>
           </Box>
           <InventoryIcon sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }} />
@@ -130,17 +136,19 @@ function ResponsiveAppBar() {
             CRUD
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
-            {Object.entries(pages).map(([page, path]) => (
-              <Button
-                key={page}
-                onClick={handleCloseNavMenu}
-                sx={{ my: 2, color: 'white', display: 'block', ":hover": { color: 'white', backgroundColor: '#4795e2' } }}
-                variant="outlined"
-                href={path}
-              >
-                {page}
-              </Button>
-            ))}
+            {Object.entries(pages).map(([page, pathData]) => {
+              if (pathData.role === "all" || (pathData.role === "user" && user)) {
+                return (<Button
+                  key={page}
+                  onClick={handleCloseNavMenu}
+                  sx={{ my: 2, color: 'white', display: 'block', ":hover": { color: 'white', backgroundColor: '#4795e2' } }}
+                  variant="outlined"
+                  href={pathData.path}
+                >
+                  {page}
+                </Button>)
+              }
+            })}
           </Box>
 
           <Box sx={{ flexGrow: 0 }}>

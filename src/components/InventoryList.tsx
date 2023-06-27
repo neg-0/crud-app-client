@@ -1,4 +1,3 @@
-import { Button, Stack, Switch, Typography } from '@mui/material';
 import { DataGrid, GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
 import axios from 'axios';
 import { useEffect, useState } from "react";
@@ -22,15 +21,18 @@ const inventoryItemColumns: GridColDef[] = [
   { field: 'username', headerName: 'Owner Name', width: 200, valueGetter: (params) => `${params.row.user?.first_name} ${params.row.user?.last_name}` }
 ]
 
-export default function InventoryList() {
+type InventoryListProps = {
+  onlyUsersItems?: boolean
+}
+
+export default function InventoryList({ onlyUsersItems = false }: InventoryListProps) {
   const [inventoryItems, setInventoryItems] = useState<InventoryItemData[] | null>([]);
-  const [displayAllItems, setDisplayAllItems] = useState(true);
 
   const { user } = useAuth();
 
   useEffect(() => {
     // Build the url based on display options
-    const url = `${import.meta.env.VITE_API_URL}/items?descLimit=100&addUserData=true&onlyMyItems=${!displayAllItems}`;
+    const url = `${import.meta.env.VITE_API_URL}/items?descLimit=100&addUserData=true&onlyMyItems=${onlyUsersItems}`;
 
     axios.get(url)
       .then(res => {
@@ -38,19 +40,11 @@ export default function InventoryList() {
         return res.data;
       })
       .then(data => setInventoryItems(data as InventoryItemData[]))
-  }, [displayAllItems, user])
+  }, [onlyUsersItems, user])
 
   if (!inventoryItems) return null;
   return (
     <>
-      {user && (
-        <Button variant="outlined" color="primary" onClick={() => setDisplayAllItems(!displayAllItems)} >
-          <Stack spacing={2} direction="row" alignItems="center">
-            <Typography>Display My Items</Typography>
-            <Switch checked={displayAllItems} />
-            <Typography>Display All Items</Typography>
-          </Stack>
-        </Button>)}
       <DataGrid rows={inventoryItems} columns={inventoryItemColumns}
         initialState={{
           sorting: {
