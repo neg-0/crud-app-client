@@ -1,17 +1,13 @@
-import { Alert, Box, Button, TextField } from "@mui/material";
-import { useEffect } from "react";
+import { Alert, Box, Button, Stack, TextField, Typography } from "@mui/material";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../hooks/useAuthentication";
 
-
 export default function Login() {
 
-  const { login, error, clearError } = useAuth();
+  const { login } = useAuth();
+  const [loginError, setLoginError] = useState("");
   const navigate = useNavigate();
-
-  useEffect(() => {
-    clearError();
-  }, [clearError]);
 
   function handleLogin(e: React.SyntheticEvent) {
     e.preventDefault();
@@ -25,21 +21,22 @@ export default function Login() {
       // Then navigate to the home page
       .then(() => {
         navigate("/");
+      }).catch(err => {
+        setLoginError(err);
       });
   }
 
   return (<>
-    <Box sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
-      <h1>Login</h1>
-      <Box component="form" noValidate autoComplete="on"
-        sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', width: '100%' }}
-        onSubmit={handleLogin}
-      >
-        <TextField id="username-input" label="Username" name="username" sx={{ mt: 3, mb: 2 }} required />
-        <TextField id="password-input" type="password" name="password" label="Password" sx={{ mt: 3, mb: 2 }} required />
+    <Box component="form" noValidate autoComplete="on"
+      onSubmit={handleLogin}
+    >
+      <Stack spacing={2} sx={{ width: "50%", margin: "auto", mt: 3, alignItems: "center" }}>
+        <Typography variant="h2">Login</Typography>
+        <TextField id="username-input" label="Username" name="username" required />
+        <TextField id="password-input" type="password" name="password" label="Password" required />
         <Button variant="contained" color="primary" type="submit" sx={{ mt: 3, mb: 2 }}>Login</Button>
-        {error && <Alert severity="error">{error}</Alert>}
-      </Box>
+        {loginError && <Alert severity="error">{loginError}</Alert>}
+      </Stack>
     </Box>
   </>)
 }

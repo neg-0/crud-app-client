@@ -99,6 +99,7 @@ function Authentication() {
       ).catch(err => {
         console.log(err);
         setError(err.response.data.error);
+        return Promise.reject(err.response.data.error);
       });
   }
 

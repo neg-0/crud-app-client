@@ -1,4 +1,4 @@
-import { Box, Button, TextField } from "@mui/material";
+import { Box, Button, Stack, TextField, Typography } from "@mui/material";
 import React, { useEffect } from "react";
 import { useAuth } from "../hooks/useAuthentication";
 
@@ -33,18 +33,17 @@ export default function Register() {
 
   return (
     <>
-      <Box sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
-        <h1>Register</h1>
-        <Box component="form" noValidate autoComplete="on"
-          sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', width: '100%' }}
-          onSubmit={handleRegister}
-        >
+      <Box component="form" noValidate autoComplete="on"
+        onSubmit={handleRegister}
+      >
+        <Stack spacing={2} sx={{ width: "50%", margin: "auto", mt: 3, alignItems: "center" }}>
+          <Typography variant="h2">Register</Typography>
           <TextField label="First Name" variant="outlined" name="first_name" />
           <TextField label="Last Name" variant="outlined" name="last_name" />
           <TextField label="Username" variant="outlined" name="username" />
           <TextField label="Password" variant="outlined" name="password" type="password" />
           <Button type="submit" variant="contained">Register</Button>
-        </Box>
+        </Stack>
       </Box>
     </>
   )
