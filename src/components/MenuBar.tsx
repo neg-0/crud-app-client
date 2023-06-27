@@ -63,7 +63,7 @@ function ResponsiveAppBar() {
             href="/"
             sx={{
               mr: 2,
-              display: { xs: 'none', md: 'flex' },
+              display: { xs: 'none', md: 'flex', ":hover": { color: 'white' } },
               fontFamily: 'monospace',
               fontWeight: 700,
               letterSpacing: '.3rem',
@@ -118,7 +118,7 @@ function ResponsiveAppBar() {
             href=""
             sx={{
               mr: 2,
-              display: { xs: 'flex', md: 'none' },
+              display: { xs: 'flex', md: 'none', ":hover": { color: 'white' } },
               flexGrow: 1,
               fontFamily: 'monospace',
               fontWeight: 700,
@@ -134,7 +134,7 @@ function ResponsiveAppBar() {
               <Button
                 key={page}
                 onClick={handleCloseNavMenu}
-                sx={{ my: 2, color: 'white', display: 'block', ":hover": { color: 'white', backgroundColor: '#1976d2' } }}
+                sx={{ my: 2, color: 'white', display: 'block', ":hover": { color: 'white', backgroundColor: '#4795e2' } }}
                 variant="outlined"
                 href={path}
               >
