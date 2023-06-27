@@ -3,6 +3,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { InventoryItemData } from "../components/InventoryList";
+import { useAuth } from "../hooks/useAuthentication";
 
 const api = axios.create({
   baseURL: import.meta.env.VITE_API_URL,
@@ -11,64 +12,79 @@ const api = axios.create({
 
 export default function ViewItem() {
 
+  const { user } = useAuth();
   const { itemId } = useParams();
   const navigate = useNavigate();
-  const [item, setItem] = useState<InventoryItemData | null>(null);
-  const [itemName, setItemName] = useState<string>("");
+
+  const [item, setItem] = useState<InventoryItemData>({} as InventoryItemData);
+  const [editableItem, setEditableItem] = useState<InventoryItemData>({} as InventoryItemData);
+
   const [editingItem, setEditingItem] = useState<boolean>(false);
   const [deletingItem, setDeletingItem] = useState<boolean>(false);
+
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
+    setError(null);
     api.get(`/items/${itemId}`)
       .then(res => {
         setItem(res.data);
-        setItemName(res.data.item_name);
       }).catch(err => {
-        setError(err.response.data.message);
+        setError(err.response.data.error);
         console.log(err);
       });
   }, [itemId]);
+
+  useEffect(() => {
+    // Any time the item updates, automatically clone the editable item
+    setEditableItem({ ...item } as InventoryItemData);
+  }, [item]);
 
   function handleEditItem() {
     setEditingItem(true);
   }
 
+  function handleCancelEditItem() {
+    setError(null);
+    setEditableItem({ ...item } as InventoryItemData);
+    setEditingItem(false);
+  }
+
   function handleSaveItem() {
-    api.put(`/items/${itemId}`, item)
+    setError(null);
+    api.put(`/items/${itemId}`, editableItem)
       .then(res => {
         console.log(res);
         setItem(res.data);
-        setItemName(res.data.item_name);
         setEditingItem(false);
       }).catch(err => {
-        setError(err.response.data.message);
+        setError(err.response.data.error);
         console.log(err);
       });
   }
 
   function handleDeleteItem() {
+    setError(null);
     api.delete(`/items/${itemId}`)
       .then(res => {
         console.log(res);
         // Navigate to the home page
         navigate("/");
       }).catch(err => {
-        setError(err.response.data.message);
+        setError(err.response.data.error);
         console.log(err);
       });
   }
 
-
-  if (!item) return (<>Loading...</>)
+  if (!item.id || !editableItem.id) return (<>Loading...</>)
 
   return (<>
     <Stack spacing={2} sx={{ width: "50%", margin: "auto", mt: 3 }}>
-      <Typography variant="h4">{itemName}</Typography>
+      <Typography variant="h4">{item.item_name}</Typography>
       <TextField disabled={true} label="Item ID" value={item.id} />
-      <TextField disabled={!editingItem} label="Item Name" value={item.item_name} onChange={(e) => setItem({ ...item, item_name: e.target.value })} />
-      <TextField disabled={!editingItem} label="Item Description" value={item.description} onChange={(e) => setItem({ ...item, description: e.target.value })} />
-      <TextField disabled={!editingItem} label="Item Quantity" value={item.quantity} type="number" onChange={(e) => setItem({ ...item, quantity: parseInt(e.target.value) })} />
+      <TextField disabled={!editingItem} label="Item Name" value={editableItem.item_name} onChange={(e) => setEditableItem({ ...editableItem, item_name: e.target.value })} />
+      <TextField disabled={!editingItem} label="Item Description" multiline value={editableItem.description} onChange={(e) => setEditableItem({ ...editableItem, description: e.target.value })} />
+      <TextField disabled={!editingItem} label="Item Quantity" value={editableItem.quantity} type="number" onChange={(e) => setEditableItem({ ...editableItem, quantity: parseInt(e.target.value) })} />
 
       {item.user && (
         <>
@@ -80,11 +96,11 @@ export default function ViewItem() {
       {editingItem && (
         <>
           <Alert severity="info">
-            Editing Item {itemName}
+            Editing Item {item.item_name}
           </Alert>
           <Stack direction="row" spacing={2} sx={{ width: "50%", margin: "auto" }}>
             <Button variant="contained" color="success" onClick={handleSaveItem} >Save Item</Button>
-            <Button variant="contained" color="error" onClick={() => setEditingItem(false)} >Cancel</Button>
+            <Button variant="contained" color="error" onClick={handleCancelEditItem} >Cancel</Button>
           </Stack>
         </>
       )}
@@ -92,7 +108,7 @@ export default function ViewItem() {
       {deletingItem && (
         <>
           <Alert severity="error">
-            Are you sure you want to delete item {itemName}
+            Are you sure you want to delete item {item.item_name}
           </Alert>
           <Stack direction="row" spacing={2} sx={{ width: "50%", margin: "auto" }}>
             <Button variant="contained" color="error" onClick={handleDeleteItem} >Confirm Delete</Button>
@@ -100,7 +116,7 @@ export default function ViewItem() {
           </Stack>
         </>)}
 
-      {!editingItem && !deletingItem && (
+      {user && user.id === item.user_id && !editingItem && !deletingItem && (
         <>
           <Stack direction="row" spacing={2} sx={{ width: "50%", margin: "auto" }}>
             <Button variant="contained" color="success" onClick={handleEditItem} >Edit Item</Button>
