@@ -2,7 +2,7 @@ import axios, { AxiosResponse } from "axios";
 import { createContext, useCallback, useContext, useEffect, useState } from "react";
 
 const api = axios.create({
-  baseURL: 'http://localhost:3000',
+  baseURL: import.meta.env.VITE_API_URL,
   withCredentials: true
 });
 

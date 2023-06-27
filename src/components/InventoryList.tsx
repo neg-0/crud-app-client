@@ -30,7 +30,7 @@ export default function InventoryList() {
 
   useEffect(() => {
     // Build the url based on display options
-    const url = `http://localhost:3000/items?descLimit=100&addUserData=true&onlyMyItems=${!displayAllItems}`;
+    const url = `${import.meta.env.VITE_API_URL}/items?descLimit=100&addUserData=true&onlyMyItems=${!displayAllItems}`;
 
     axios.get(url)
       .then(res => {
