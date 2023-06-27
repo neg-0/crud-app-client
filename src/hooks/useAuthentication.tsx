@@ -19,8 +19,6 @@ type AuthContextProps = {
   register: (username: string, password: string, first_name: string, last_name: string) => Promise<void | AxiosResponse<unknown, unknown>>,
   login: (username: string, password: string) => Promise<void | AxiosResponse<unknown, unknown>>,
   logout: () => void,
-  error: null | string,
-  clearError: () => void,
   changeUserData: (user: {
     username: string,
     first_name: string,
@@ -56,14 +54,12 @@ export function useAuth() {
 function Authentication() {
 
   const [user, setUser] = useState<null | User>(null);
-  const [error, setError] = useState<null | string>(null);
 
   console.log("User", user)
 
   const autoSignIn = useCallback(async () => {
     api.get('/user').then(res => {
       console.log("Successful get user", res);
-      clearError();
       setUser(res.data);
       return res;
     }).catch(() => {
@@ -79,12 +75,10 @@ function Authentication() {
     return api.post('/register', { username, password, first_name, last_name })
       .then(res => {
         console.log("Successful register", res);
-        clearError();
         setUser(res.data);
         return res;
       }).catch(err => {
-        console.log(err);
-        setError(err.response.data.error);
+        return Promise.reject(err.response.data.error);
       });
   }
 
@@ -92,13 +86,10 @@ function Authentication() {
     return api.post('/login', { username, password })
       .then(res => {
         console.log("Successful login", res);
-        clearError();
         setUser(res.data);
         return res;
       }
       ).catch(err => {
-        console.log(err);
-        setError(err.response.data.error);
         return Promise.reject(err.response.data.error);
       });
   }
@@ -107,12 +98,10 @@ function Authentication() {
     return api.get('/logout')
       .then(res => {
         console.log("Successful logout", res);
-        clearError();
         setUser(null);
         return res;
       }).catch(err => {
-        console.log(err);
-        setError(err.response.data.error);
+        return Promise.reject(err.response.data.error);
       });
   }
 
@@ -124,7 +113,6 @@ function Authentication() {
     return api.post('/change_user_data', user)
       .then(res => {
         console.log("Successful change user data", res);
-        clearError();
         setUser(res.data);
         return res;
       })
@@ -134,14 +122,9 @@ function Authentication() {
     return api.post('/change_password', { password })
       .then(res => {
         console.log("Successful change password", res);
-        clearError();
         setUser(res.data);
         return res;
       })
-  }
-
-  function clearError() {
-    setError(null);
   }
 
   return {
@@ -150,8 +133,6 @@ function Authentication() {
     register,
     login,
     logout,
-    error,
-    clearError,
     changeUserData,
     changePassword,
   }

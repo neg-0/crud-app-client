@@ -1,14 +1,11 @@
-import { Box, Button, Stack, TextField, Typography } from "@mui/material";
-import React, { useEffect } from "react";
+import { Alert, Box, Button, Stack, TextField, Typography } from "@mui/material";
+import React from "react";
 import { useAuth } from "../hooks/useAuthentication";
 
 export default function Register() {
 
-  const { register, clearError } = useAuth();
-
-  useEffect(() => {
-    clearError();
-  }, [clearError]);
+  const { register } = useAuth();
+  const [error, setError] = React.useState<string | null>(null);
 
   function handleRegister(e: React.SyntheticEvent) {
     e.preventDefault();
@@ -28,6 +25,8 @@ export default function Register() {
       .then(() => {
         // Redirect to the home page
         window.location.href = "/";
+      }).catch((err) => {
+        setError(err);
       });
   }
 
@@ -43,6 +42,7 @@ export default function Register() {
           <TextField label="Username" variant="outlined" name="username" />
           <TextField label="Password" variant="outlined" name="password" type="password" />
           <Button type="submit" variant="contained">Register</Button>
+          {error && <Alert severity="error">{error}</Alert>}
         </Stack>
       </Box>
     </>
