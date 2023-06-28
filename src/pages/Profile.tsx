@@ -82,7 +82,7 @@ export default function Profile() {
   }
 
   return (<>
-    <Stack component="form" spacing={2} sx={{ width: "50%", margin: "auto", mt: 3 }}>
+    <Stack component="form" spacing={2} sx={{ width: "50%", margin: "auto", py: 3 }}>
       <Typography variant="h4">{`${user.first_name} ${user.last_name}'s Profile`}</Typography>
       <TextField disabled={true} label="User ID" value={user.id} />
       <TextField disabled={!editingUser} label="First Name" value={firstName} onChange={(e) => setFirstName(e.target.value)} />

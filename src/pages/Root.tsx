@@ -6,7 +6,7 @@ export default function Root() {
   return (
     <>
       <Box sx={{ width: '100vw' }}><MenuBar /></Box>
-      <Box sx={{ width: '100vw', height: 'calc(100vh - 64px)' }}><Outlet /></Box>
+      <Box sx={{ width: '100vw', height: 'calc(100vh - 70px)' }}><Outlet /></Box>
     </>
   )
 }

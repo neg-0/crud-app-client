@@ -30,7 +30,7 @@ export default function Login() {
     <Box component="form" noValidate autoComplete="on"
       onSubmit={handleLogin}
     >
-      <Stack spacing={2} sx={{ width: "50%", margin: "auto", mt: 3, alignItems: "center" }}>
+      <Stack spacing={2} sx={{ width: "50%", margin: "auto", py: 3, alignItems: "center" }}>
         <Typography variant="h2">Login</Typography>
         <TextField id="username-input" label="Username" name="username" required />
         <TextField id="password-input" type="password" name="password" label="Password" required />

@@ -35,7 +35,7 @@ export default function Register() {
       <Box component="form" noValidate autoComplete="on"
         onSubmit={handleRegister}
       >
-        <Stack spacing={2} sx={{ width: "50%", margin: "auto", mt: 3, alignItems: "center" }}>
+        <Stack spacing={2} sx={{ width: "50%", margin: "auto", py: 3, alignItems: "center" }}>
           <Typography variant="h2">Register</Typography>
           <TextField label="First Name" variant="outlined" name="first_name" />
           <TextField label="Last Name" variant="outlined" name="last_name" />

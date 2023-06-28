@@ -79,7 +79,7 @@ export default function ViewItem() {
   if (!item.id || !editableItem.id) return (<>Loading...</>)
 
   return (<>
-    <Stack spacing={2} sx={{ width: "50%", margin: "auto", mt: 3 }}>
+    <Stack spacing={2} sx={{ width: "50%", margin: "auto", py: 3 }}>
       <Typography variant="h4">{item.item_name}</Typography>
       <TextField disabled={true} label="Item ID" value={item.id} />
       <TextField disabled={!editingItem} label="Item Name" value={editableItem.item_name} onChange={(e) => setEditableItem({ ...editableItem, item_name: e.target.value })} />
