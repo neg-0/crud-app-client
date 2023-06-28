@@ -7,8 +7,8 @@ type InventoryProps = {
 
 export default function Inventory({ onlyUsersItems }: InventoryProps) {
   return (<>
-    <Typography variant="h1" sx={{ ml: 6 }}>{onlyUsersItems ? 'My Items' : 'All Items'}</Typography>
-    <Box sx={{ height: 'calc(100vh - 200px)', overflowY: 'auto', width: 'calc(100% - 16px)', pl: 2 }}>
+    <Typography variant="h2" sx={{ ml: 6 }}>{onlyUsersItems ? 'My Items' : 'All Items'}</Typography>
+    <Box sx={{ height: 'calc(100vh - 160px)', overflowY: 'auto', width: 'calc(100% - 16px)', pl: 2 }}>
       <InventoryList onlyUsersItems={onlyUsersItems} />
     </Box>
   </>)
