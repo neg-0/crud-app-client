@@ -42,7 +42,7 @@ export default function CreateItem() {
   }
 
   function handleCancelCreateItem() {
-    navigate("/");
+    navigate("/myItems");
   }
 
   return (<>
