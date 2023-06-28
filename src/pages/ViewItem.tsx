@@ -88,7 +88,6 @@ export default function ViewItem() {
 
       {item.user && (
         <>
-          <TextField disabled={true} label="Item Owner User ID" value={item.user.id} />
           <TextField disabled={true} label="Item Owner User Name" value={item.user.first_name + " " + item?.user?.last_name} />
         </>
       )}
