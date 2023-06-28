@@ -18,9 +18,9 @@ export default function Login() {
     const username = target.username.value;
     const password = target.password.value;
     login(username, password)
-      // Then navigate to the home page
+      // Then navigate to their items
       .then(() => {
-        navigate("/");
+        navigate("/myItems");
       }).catch(err => {
         setLoginError(err);
       });
