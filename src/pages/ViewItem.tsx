@@ -116,11 +116,12 @@ export default function ViewItem() {
           </Stack>
         </>)}
 
-      {user && user.id === item.user_id && !editingItem && !deletingItem && (
+      {user && !editingItem && !deletingItem && (
         <>
-          <Stack direction="row" spacing={2} sx={{ width: "50%", margin: "auto" }}>
-            <Button variant="contained" color="success" onClick={handleEditItem} >Edit Item</Button>
-            <Button variant="contained" color="error" onClick={() => setDeletingItem(true)} >Delete Item</Button>
+          <Stack direction="row" spacing={2} sx={{ margin: "auto" }}>
+            <Button variant="contained" disabled={user.id !== item.user_id} color="success" onClick={handleEditItem} >Edit Item</Button>
+            <Button variant="contained" disabled={user.id !== item.user_id} color="error" onClick={() => setDeletingItem(true)} >Delete Item</Button>
+            {user.id !== item.user_id && <Alert severity="info"> You may only edit and delete you own items.</Alert>}
           </Stack>
         </>
       )}
