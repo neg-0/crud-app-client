@@ -23,7 +23,11 @@ type AuthContextProps = {
     username: string,
     first_name: string,
     last_name: string,
-  }) => Promise<void | AxiosResponse<unknown, unknown>>,
+  }) => Promise<{
+    username: string,
+    first_name: string,
+    last_name: string,
+  }>,
   changePassword: (password: string) => Promise<void | AxiosResponse<unknown, unknown>>,
 }
 
@@ -114,17 +118,23 @@ function Authentication() {
       .then(res => {
         console.log("Successful change user data", res);
         setUser(res.data);
-        return res;
+        return res.data;
       })
+      .catch(err => {
+        console.log("Error", err.response.data.error);
+        return Promise.reject(err.response.data.error);
+      });
   }
 
   function changePassword(password: string) {
     return api.post('/change_password', { password })
       .then(res => {
         console.log("Successful change password", res);
-        setUser(res.data);
         return res;
       })
+      .catch(err => {
+        return Promise.reject(err.response.data.error);
+      });
   }
 
   return {

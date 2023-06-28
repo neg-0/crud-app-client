@@ -6,16 +6,18 @@ export default function Profile() {
 
   const { user, changeUserData, changePassword } = useAuth();
 
-  const [newPassword, setNewPassword] = useState("");
-  const [verifyPassword, setVerifyPassword] = useState("");
+  const [newPassword, setNewPassword] = useState<string>("");
+  const [verifyPassword, setVerifyPassword] = useState<string>("");
 
-  const [userDataError, setUserDataError] = useState("");
-  const [passwordError, setPasswordError] = useState("");
+  const [userDataError, setUserDataError] = useState<string>("");
+  const [userDataSuccess, setUserDataSuccess] = useState<null | string>("");
+  const [passwordError, setPasswordError] = useState<string>("");
+  const [passwordSuccess, setPasswordSuccess] = useState<null | string>("");
 
-  const [editingUser, setEditingUser] = useState(false);
-  const [username, setUsername] = useState("");
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
+  const [editingUser, setEditingUser] = useState<boolean>(false);
+  const [username, setUsername] = useState<string>("");
+  const [firstName, setFirstName] = useState<string>("");
+  const [lastName, setLastName] = useState<string>("");
 
   useEffect(() => {
     if (!user)
@@ -28,6 +30,8 @@ export default function Profile() {
   }, [user]);
 
   function handleUpdatePassword() {
+    setPasswordSuccess(null);
+
     // Verify password is not blank
     if (newPassword === "") {
       setPasswordError("Password cannot be blank");
@@ -45,6 +49,7 @@ export default function Profile() {
         setPasswordError("");
         setNewPassword("");
         setVerifyPassword("");
+        setPasswordSuccess("Password updated successfully");
       })
       .catch((err) => {
         setPasswordError(err.message);
@@ -52,19 +57,21 @@ export default function Profile() {
   }
 
   function handleChangeUserData() {
+    setUserDataSuccess(null);
     changeUserData({
       first_name: firstName,
       last_name: lastName,
       username: username
     })
-      .then(() => {
-        setFirstName("");
-        setLastName("");
+      .then((res) => {
+        setFirstName(res.first_name);
+        setLastName(res.last_name);
+        setUsername(res.username);
         setEditingUser(false);
+        setUserDataSuccess("User data updated successfully");
       })
       .catch((err) => {
-        console.log(err);
-        setUserDataError(err.response.data.error);
+        setUserDataError(err);
       });
   }
 
@@ -82,7 +89,7 @@ export default function Profile() {
   }
 
   return (<>
-    <Stack component="form" spacing={2} sx={{ width: "50%", margin: "auto", py: 3 }}>
+    <Stack component="form" spacing={2} sx={{ width: "50%", margin: "auto", py: 3 }} onSubmit={e => e.preventDefault()}>
       <Typography variant="h4">{`${user.first_name} ${user.last_name}'s Profile`}</Typography>
       <TextField disabled={true} label="User ID" value={user.id} />
       <TextField disabled={!editingUser} label="First Name" value={firstName} onChange={(e) => setFirstName(e.target.value)} />
@@ -105,6 +112,7 @@ export default function Profile() {
           <Stack direction="row" spacing={2} sx={{ width: "50%", margin: "auto" }}>
             <Button variant="contained" color="success" onClick={() => setEditingUser(true)} >Edit User</Button>
           </Stack>
+          {userDataSuccess && <Alert severity="success">{userDataSuccess}</Alert>}
         </>
       }
 
@@ -116,5 +124,6 @@ export default function Profile() {
       </Stack>
 
       {passwordError && <Alert severity="error">{passwordError}</Alert>}
+      {passwordSuccess && <Alert severity="success">{passwordSuccess}</Alert>}
     </Stack></>)
 }
