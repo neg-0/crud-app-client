@@ -175,6 +175,9 @@ function ResponsiveAppBar() {
             >
               {user ?
                 <Box sx={{ minWidth: "200px" }}>
+                  <MenuItem disabled sx={{ mb: 1 }}>
+                    <Typography textAlign="center">{user.username}</Typography>
+                  </MenuItem>
                   <MenuItem onClick={handleCloseUserMenu} component={Link} href='/profile'>
                     <Typography textAlign="center">Profile</Typography>
                   </MenuItem>
@@ -185,6 +188,9 @@ function ResponsiveAppBar() {
                 </Box>
                 :
                 <Box sx={{ minWidth: "200px" }}>
+                  <MenuItem disabled sx={{ mb: 1 }}>
+                    <Typography textAlign="center">Visitor</Typography>
+                  </MenuItem>
                   <MenuItem onClick={handleCloseUserMenu} component={Link} href='/register'>
                     <Typography textAlign="center">Register</Typography>
                   </MenuItem>
