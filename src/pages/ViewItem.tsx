@@ -68,8 +68,8 @@ export default function ViewItem() {
     api.delete(`/items/${itemId}`)
       .then(res => {
         console.log(res);
-        // Navigate to the home page
-        navigate("/");
+        // Navigate to their items
+        navigate("/myItems");
       }).catch(err => {
         setError(err.response.data.error);
         console.log(err);
