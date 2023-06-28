@@ -5,20 +5,20 @@ import { Link } from 'react-router-dom';
 import { User, useAuth } from '../hooks/useAuthentication';
 
 export type InventoryItemData = {
-  id: number,
+  id?: number,
   item_name: string,
   description: string,
   quantity: number,
-  user_id: number,
-  user: User | null
+  user_id?: number,
+  user?: User | null
 }
 
 const inventoryItemColumns: GridColDef[] = [
   { field: 'id', headerName: 'ID', width: 100 },
   { field: 'item_name', headerName: 'Name', width: 300, renderCell: (params: GridRenderCellParams<InventoryItemData>) => (<Link to={`/viewItem/${params.row.id}`}>{params.value}</Link>) },
-  { field: 'description', headerName: 'Description', width: 800 },
   { field: 'quantity', headerName: 'Quantity', width: 100 },
-  { field: 'username', headerName: 'Owner Name', width: 200, valueGetter: (params) => `${params.row.user?.first_name} ${params.row.user?.last_name}` }
+  { field: 'username', headerName: 'Owner Name', width: 200, valueGetter: (params) => `${params.row.user?.first_name} ${params.row.user?.last_name}` },
+  { field: 'description', headerName: 'Description', width: 800 },
 ]
 
 type InventoryListProps = {
@@ -32,7 +32,12 @@ export default function InventoryList({ onlyUsersItems = false }: InventoryListP
 
   useEffect(() => {
     // Build the url based on display options
-    const url = `${import.meta.env.VITE_API_URL}/items?descLimit=100&addUserData=true&onlyMyItems=${onlyUsersItems}`;
+    let url = "";
+    if (onlyUsersItems) {
+      url = `${import.meta.env.VITE_API_URL}/my_items?descLimit=100`;
+    } else {
+      url = `${import.meta.env.VITE_API_URL}/items?descLimit=100`;
+    }
 
     axios.get(url)
       .then(res => {
