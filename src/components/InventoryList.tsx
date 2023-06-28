@@ -4,6 +4,11 @@ import { useEffect, useState } from "react";
 import { Link } from 'react-router-dom';
 import { User, useAuth } from '../hooks/useAuthentication';
 
+const api = axios.create({
+  baseURL: import.meta.env.VITE_API_URL,
+  withCredentials: true
+});
+
 export type InventoryItemData = {
   id?: number,
   item_name: string,
@@ -34,12 +39,12 @@ export default function InventoryList({ onlyUsersItems = false }: InventoryListP
     // Build the url based on display options
     let url = "";
     if (onlyUsersItems) {
-      url = `${import.meta.env.VITE_API_URL}/my_items?descLimit=100`;
+      url = `/my_items?descLimit=100`;
     } else {
-      url = `${import.meta.env.VITE_API_URL}/items?descLimit=100`;
+      url = `/items?descLimit=100`;
     }
 
-    axios.get(url)
+    api.get(url)
       .then(res => {
         console.log(res)
         return res.data;
